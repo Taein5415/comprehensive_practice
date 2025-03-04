@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrinkRepository {
-    private final FileDrinkStorage fileDrinkStorage;
+    private final Storage fileDrinkStorage;
     private final List<Drink> drinkList;
 
     public DrinkRepository(FileDrinkStorage fileDrinkStorage){
@@ -20,4 +20,16 @@ public class DrinkRepository {
     }
 
 
+    public Drink selectByname(String name) {
+        return (Drink) drinkList.stream().filter(d -> d.getName().equals(name));
+    }
+
+    public void updateDrink(Drink drink) {
+        for(int i=0;i<drinkList.size();i++){
+            if(drinkList.get(i).getName().equals(drink.getName())) {
+                drinkList.set(i, drink);
+                fileDrinkStorage.save(drinkList);
+            }
+        }
+    }
 }
