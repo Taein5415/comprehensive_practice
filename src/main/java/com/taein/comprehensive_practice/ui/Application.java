@@ -49,8 +49,13 @@ public class Application {
     private void buyDrinks() {
         showAllDrinks();
         System.out.println("구매하실 음료의 이름을 입력하세요");
-        String name = scanner.nextLine();
-        DrinkService.buyDrink(name);
+        try {
+            String name = scanner.nextLine();
+            drinkService.buyDrink(name);
+            System.out.println(name+" 구매 완료했습니다.");
+        }catch(Exception e){
+            System.out.println("음료 구매 실패 : "+e.getMessage());
+        }
     }
 
     private void showAllDrinks() {
