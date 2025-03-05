@@ -14,7 +14,7 @@ public class DrinkService {
 
     public void buyDrink(String name) {
         Drink drink;
-        if((drink = drinkRepository.selectByname(name))==null){
+        if((drink = drinkRepository.selectByName(name))==null){
             throw new IllegalArgumentException("해당 음료는 존재하지 않습니다.");
         }
         if(drink.getQuantity() <1){
@@ -25,11 +25,13 @@ public class DrinkService {
 
     }
 
-    private static boolean drinkNotExists(String name) {
-
-    }
 
     public List<Drink> findAllDrinks(){
         return drinkRepository.selectAllDrinks();
+    }
+
+    public void createAndSaveDrink(String name, int price, int quantity) {
+        Drink drink = new Drink(name, price, quantity);
+        drinkRepository.save(drink);
     }
 }
