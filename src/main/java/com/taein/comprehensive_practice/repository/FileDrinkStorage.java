@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDrinkStorage implements Storage<Drink> {
-    private final static String FILE_PATH = "src/main/java/com/taein/comprehensive_practice/db/drinkDB.txt";
+    private final static String FILE_PATH = "src/main/java/com/taein/comprehensive_practice/db/drinkDB.dat";
     @Override
     public void save(List<Drink> list) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
@@ -15,6 +15,10 @@ public class FileDrinkStorage implements Storage<Drink> {
         } catch (IOException e) {
             throw new RuntimeException("drinkDB.txt 파일 저장 오류 ");
         }
+    }
+
+    public void init(){
+
     }
 
     @Override
