@@ -1,6 +1,8 @@
 package com.taein.comprehensive_practice.domain;
 
-public class Drink {
+import java.io.Serializable;
+
+public class Drink implements Serializable {
     private String name;
     private int price;
     private int quantity;
