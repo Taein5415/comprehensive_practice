@@ -15,11 +15,7 @@ public class Drink implements Serializable {
 
     @Override
     public String toString() {
-        return "Drink{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                '}';
+        return name+" ("+quantity+"개) :"+price+"원";
     }
 
     public String getName() {
