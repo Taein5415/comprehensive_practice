@@ -10,11 +10,6 @@ public class DrinkRepository {
     private final Storage fileDrinkStorage;
     private final List<Drink> drinkList;
 
-    public void insert(Drink drink){
-        drinkList.add(drink);
-        fileDrinkStorage.save(drinkList);
-    }
-
     private static DrinkRepository instance;
     private DrinkRepository(){
         fileDrinkStorage = FileDrinkStorage.getInstance();
@@ -33,16 +28,17 @@ public class DrinkRepository {
     }
 
 
-    public Drink selectByName(String name) {
+    public Optional<Drink> selectByName(String name) {
         Optional<Drink> drink = drinkList.stream()
                 .filter(d -> d.getName().equals(name))
                 .findFirst(); // 첫 번째 일치하는 요소 반환
 
-        // 값이 존재하면 출력, 없으면 메시지 출력
-        if(drink.isPresent())
-            return drink.get();
-        else
-            throw new NullPointerException("해당 음료는 존재하지 않습니다.");
+        return drink;
+    }
+
+    public void insert(Drink drink){
+        drinkList.add(drink);
+        fileDrinkStorage.save(drinkList);
     }
 
     public void updateDrink(Drink drink) {
@@ -52,5 +48,11 @@ public class DrinkRepository {
                 fileDrinkStorage.save(drinkList);
             }
         }
+    }
+
+
+    public void delete(String name) {
+        drinkList.removeIf(drink->drink.getName().equals(name));
+        fileDrinkStorage.save(drinkList);
     }
 }
