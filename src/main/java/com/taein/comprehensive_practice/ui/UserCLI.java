@@ -6,6 +6,7 @@ import com.taein.comprehensive_practice.repository.CashRepository;
 import com.taein.comprehensive_practice.repository.DrinkRepository;
 import com.taein.comprehensive_practice.repository.FileCashStorage;
 import com.taein.comprehensive_practice.repository.FileDrinkStorage;
+import com.taein.comprehensive_practice.service.AdminAuthService;
 import com.taein.comprehensive_practice.service.CashService;
 import com.taein.comprehensive_practice.service.DrinkService;
 
@@ -17,11 +18,13 @@ public class UserCLI {
     private final Scanner scanner;
     private DrinkService drinkService;
     private CashService cashService;
+    private AdminAuthService adminAuthService;
 
     public UserCLI(){
         scanner = new Scanner(System.in);
         drinkService = DrinkService.getInstance();
         cashService = CashService.getInstance();
+        adminAuthService = AdminAuthService.getInstance();
     }
 
     public void run() {
@@ -32,8 +35,6 @@ public class UserCLI {
             System.out.println("2. 음료 구매");
             System.out.println("3. 화폐 삽입");
             System.out.println("4. 거스름돈 받기");
-            System.out.println("5. 재고 추가");
-            System.out.println("6. 화폐 관리");
             System.out.println("9. 프로그램 종료");
             System.out.print("메뉴 선택: ");
 
@@ -45,9 +46,7 @@ public class UserCLI {
                     case 2 -> buyDrinks();
                     case 3 -> insertCoin();
                     case 4 -> returnChange();
-                    case 5 -> addInventory();
-                    case 6 -> manageCash();
-                    //case 999 ->
+                    case 999 -> checkAdminAccess();
                     case 9 -> {
                         System.out.println("프로그램을 종료합니다.");
                         return;
@@ -58,6 +57,16 @@ public class UserCLI {
                 System.out.println("오류: " + e.getMessage());
             }
         }
+    }
+
+    private void checkAdminAccess() {
+        System.out.print("비밀번호를 입력하세요 : ");
+        String password = scanner.nextLine();
+        if(adminAuthService.authenticateAdmin(password))
+            new AdminCLI().run();
+        else
+            throw new RuntimeException("비밀번호가 틀렸습니다.");
+
     }
 
     private void returnChange() {
@@ -72,45 +81,6 @@ public class UserCLI {
 
     }
 
-    private void manageCash() {
-        System.out.println("\n===== 화폐 관리 =====");
-        System.out.println("1. 화폐 목록 확인");
-        System.out.println("2. 화폐 추가");
-        System.out.println("3. 화폐 수거");
-        System.out.print("메뉴 선택: ");
-        int choice;
-        try {
-            choice = scanner.nextInt();
-            scanner.nextLine();
-        }catch(InputMismatchException e){
-            throw new InputMismatchException("잘못된 입력입니다.");
-        }
-        switch (choice) {
-            case 1 -> printCashList();
-            case 2 -> addCash();
-            //case 3 -> collectCash();
-            default -> System.out.println("잘못된 입력입니다. 다시 선택해주세요.");
-        }
-    }
-
-    private void printCashList(){
-        cashService.findAllCash().forEach(System.out::println);
-    }
-
-    private void addCash() {
-        try {
-            System.out.println("\n===== 화폐 추가 =====");
-            System.out.print("화폐 단위 : ");
-            int value = scanner.nextInt();
-            System.out.print("화폐 개수 : ");
-            int quantity = scanner.nextInt();
-            cashService.addCash(value,quantity);
-            System.out.println("화폐가 추가되었습니다.");
-        }catch(InputMismatchException e){
-            throw new InputMismatchException("잘못된 입력압니다.");
-        }
-    }
-
     private void insertCoin() {
         System.out.println("입력 화폐단위");
         cashService.getUnitList().forEach(unit -> System.out.print(unit+" "));
@@ -118,25 +88,6 @@ public class UserCLI {
         System.out.print("입력할 화폐의 단위를 입력하세요 : ");
         int unit = scanner.nextInt();
         cashService.inputCash(unit);
-    }
-
-    private void addInventory() {
-        try {
-            System.out.print("음료 이름 입력>>");
-            String name = scanner.nextLine();
-            System.out.print("가격 입력");
-            int price = scanner.nextInt();
-            scanner.nextLine();
-            System.out.print("재고 수 입력");
-            int quantity = scanner.nextInt();
-            scanner.nextLine();
-            // 음료 객체 생성 및 DB 저장
-            drinkService.createAndSaveDrink(name, price, quantity);
-        }catch(Exception ex) {
-            throw new InputMismatchException("재고 입력에 실패했습니다.");
-        }
-
-
     }
 
     private void buyDrinks() {

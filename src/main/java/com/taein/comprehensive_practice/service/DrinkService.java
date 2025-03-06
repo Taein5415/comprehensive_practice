@@ -5,6 +5,7 @@ import com.taein.comprehensive_practice.repository.CashRepository;
 import com.taein.comprehensive_practice.repository.DrinkRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DrinkService {
     private final DrinkRepository drinkRepository;
@@ -25,27 +26,43 @@ public class DrinkService {
         Drink drink = findByName(name);
         drink.setQuantity(drink.getQuantity()-1);
         drinkRepository.updateDrink(drink);
-
     }
-
 
     public List<Drink> findAllDrinks(){
         return drinkRepository.selectAllDrinks();
     }
 
     public void createAndSaveDrink(String name, int price, int quantity) {
-        Drink drink = new Drink(name, price, quantity);
-        drinkRepository.insert(drink);
+        Optional<Drink> optionalDrink = drinkRepository.selectByName(name);
+        if(optionalDrink.isPresent()){
+            Drink drink = optionalDrink.get();
+            drink.setQuantity(drink.getQuantity()+quantity);
+            //drinkRepository.updateDrink(drink);
+        }
+        else{
+            Drink drink = new Drink(name, price, quantity);
+            drinkRepository.insert(drink);
+        }
+
     }
 
     public Drink findByName(String name) {
-        Drink drink;
-        if((drink = drinkRepository.selectByName(name))==null){
+        Optional<Drink> optionalDrink = drinkRepository.selectByName(name);
+        if(optionalDrink.isEmpty()){
             throw new IllegalArgumentException("해당 음료는 존재하지 않습니다.");
         }
+        Drink drink = optionalDrink.get();
         if(drink.getQuantity() <1){
             throw new IllegalArgumentException("해당 음료의 재고가 없습니다.");
         }
         return drink;
+    }
+
+    public void removeDrink(String name){
+        Optional<Drink> optionalDrink = drinkRepository.selectByName(name);
+        if(optionalDrink.isEmpty()){
+            throw new IllegalArgumentException("해당 음료는 존재하지 않습니다.");
+        }
+        drinkRepository.delete(name);
     }
 }
