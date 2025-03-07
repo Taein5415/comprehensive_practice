@@ -2,13 +2,11 @@ package com.taein.comprehensive_practice.ui;
 
 import com.taein.comprehensive_practice.domain.Cash;
 import com.taein.comprehensive_practice.domain.Drink;
-import com.taein.comprehensive_practice.repository.CashRepository;
-import com.taein.comprehensive_practice.repository.DrinkRepository;
-import com.taein.comprehensive_practice.repository.FileCashStorage;
-import com.taein.comprehensive_practice.repository.FileDrinkStorage;
+import com.taein.comprehensive_practice.repository.*;
 import com.taein.comprehensive_practice.service.AdminAuthService;
 import com.taein.comprehensive_practice.service.CashService;
 import com.taein.comprehensive_practice.service.DrinkService;
+import com.taein.comprehensive_practice.service.SalesHistoryService;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -19,12 +17,14 @@ public class UserCLI {
     private final DrinkService drinkService;
     private final CashService cashService;
     private AdminAuthService adminAuthService;
+    private SalesHistoryService salesHistoryService;
 
     public UserCLI(){
         scanner = new Scanner(System.in);
         drinkService = DrinkService.getInstance();
         cashService = CashService.getInstance();
         adminAuthService = AdminAuthService.getInstance();
+        salesHistoryService = SalesHistoryService.getInstance();
     }
 
     public void run() {
@@ -92,7 +92,7 @@ public class UserCLI {
 
     private void buyDrinks() {
         showAllDrinks();
-        System.out.println("구매하실 음료의 이름을 입력하세요: ");
+        System.out.print("구매하실 음료의 이름을 입력하세요: ");
         try {
             String name = scanner.nextLine();
             Drink drink = drinkService.findByName(name);
@@ -100,6 +100,7 @@ public class UserCLI {
             if(cashService.isPurchasable(drink.getPrice())){
                 drinkService.purchaseDrink(name);
                 cashService.reduceTotalAmount(drink.getPrice());
+                salesHistoryService.addHistory(drink);
                 System.out.println(name+" 구매 완료했습니다.");
             }
         }catch(InputMismatchException e){
