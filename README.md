@@ -68,7 +68,7 @@
     </div>
 </details>
 <details>
-    <summary>CashRepository 생성자</summary>
+    <summary>DrinkRepository 생성자</summary>
     <div markdown="1">
         <img src="./image/DrinkRepository_singleton.png">
     </div>
