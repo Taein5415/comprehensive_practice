@@ -3,19 +3,23 @@ package com.taein.comprehensive_practice.ui;
 import com.taein.comprehensive_practice.domain.SalesHistory;
 import com.taein.comprehensive_practice.service.CashService;
 import com.taein.comprehensive_practice.service.DrinkService;
+import com.taein.comprehensive_practice.service.SalesHistoryService;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class AdminCLI {
     private final Scanner scanner;
     private DrinkService drinkService;
     private CashService cashService;
+    private SalesHistoryService salesHistoryService;
 
     public AdminCLI(){
         scanner = new Scanner(System.in);
         drinkService = DrinkService.getInstance();
         cashService = CashService.getInstance();
+        salesHistoryService = SalesHistoryService.getInstance();
     }
     public void run(){
         while (true) {
@@ -46,7 +50,10 @@ public class AdminCLI {
     }
 
     private void printSalesHistory() {
-        //SalesHistoryService.
+        List<SalesHistory> historyList = salesHistoryService.findAllHistory();
+        for(SalesHistory h:historyList){
+            System.out.println(h.toString());
+        }
     }
 
     private void manageInventory() {
