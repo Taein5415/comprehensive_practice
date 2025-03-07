@@ -59,8 +59,10 @@
 </details>
 
 ## ✨고려한 점
-<div>
-1. UserCLI와 UserCLI 모두 Service를 통해 CashRepository와 DrinkRepository에서 데이터를 가져온다. 이때, 각각의 CLI에서 서로 다른 Repository에서 데이터를 읽고 쓰게 된다면 데이터의 무결성을 위반할 수 있으므로 Repository 클래스의 생성자에 싱글톤 패턴을 적용했다.
+1. 기존에는 Applicatioin에서 ui를 출력했지만, 사용자 화면과 관리자 화면을 출력하는 화면의 역할이 다르므로 Application에서 ui역할을 분리하여 각각의 클래스에 역할을 분배했음
+  
+
+2. . UserCLI와 UserCLI 모두 Service를 통해 CashRepository와 DrinkRepository에서 데이터를 가져온다. 이때, 각각의 CLI에서 서로 다른 Repository에서 데이터를 읽고 쓰게 된다면 데이터의 무결성을 위반할 수 있으므로 Repository 클래스의 생성자에 싱글톤 패턴을 적용했다.
 <details>
     <summary>CashRepository 생성자</summary>
     <div markdown="1">
@@ -73,9 +75,13 @@
         <img src="./image/DrinkRepository_singleton.png">
     </div>
 </details>
-</div>
+
 
 ## 🥲 아쉬운점
-1. 판매 내역 조회 기능을 더 세부화 하지 못했다.
-2. 테스트 코드 작성을 하지 못했다.
-3. git 컨벤션을 지키지 못했다.
++ 판매 내역 조회 기능을 더 세부화 하지 못했다. 
+  
+
++ 테스트 코드 작성을 하지 못했다. 
+  
+
++ git 컨벤션을 지키지 못했다.
