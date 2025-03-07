@@ -12,7 +12,7 @@ public class CashRepository {
 
     private static CashRepository instance;
     private CashRepository(){
-        fileCashStorage = FileDrinkStorage.getInstance();
+        fileCashStorage = FileCashStorage.getInstance();
         cashList = fileCashStorage.load();
     }
 

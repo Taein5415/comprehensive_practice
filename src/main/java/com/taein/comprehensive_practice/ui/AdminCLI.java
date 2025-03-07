@@ -1,5 +1,6 @@
 package com.taein.comprehensive_practice.ui;
 
+import com.taein.comprehensive_practice.domain.SalesHistory;
 import com.taein.comprehensive_practice.service.CashService;
 import com.taein.comprehensive_practice.service.DrinkService;
 
@@ -21,6 +22,7 @@ public class AdminCLI {
             System.out.println("\n===== 관리자 모드 =====");
             System.out.println("1. 재고 관리");
             System.out.println("2. 화폐 관리");
+            System.out.println("3. 판매 내역 조회");
             System.out.println("9. 관리자 모드 종료");
             System.out.print("메뉴 선택: ");
 
@@ -30,7 +32,7 @@ public class AdminCLI {
                 switch (choice) {
                     case 1 -> manageInventory();
                     case 2 -> manageCash();
-                    //case 999 ->
+                    case 3 -> printSalesHistory();
                     case 9 -> {
                         System.out.println("관리자 모드를 종료합니다.");
                         return;
@@ -41,6 +43,10 @@ public class AdminCLI {
                 System.out.println("오류: " + e.getMessage());
             }
         }
+    }
+
+    private void printSalesHistory() {
+        //SalesHistoryService.
     }
 
     private void manageInventory() {
@@ -108,8 +114,23 @@ public class AdminCLI {
         switch (choice) {
             case 1 -> printCashList();
             case 2 -> addCash();
-            //case 3 -> collectCash();
+            case 3 -> collectCash();
             default -> System.out.println("잘못된 입력입니다. 다시 선택해주세요.");
+        }
+    }
+
+    private void collectCash() {
+        printCashList();
+        try {
+            System.out.println("\n===== 화폐 삭제 =====");
+            System.out.print("화폐 단위 : ");
+            int unit = scanner.nextInt();
+            System.out.print("화폐 개수 : ");
+            int quantity = scanner.nextInt();
+            cashService.collectCash(unit,quantity);
+            System.out.println(unit+"원 "+quantity+"개 수거되었습니다.");
+        }catch(InputMismatchException e){
+            throw new InputMismatchException("잘못된 입력압니다.");
         }
     }
 
@@ -121,10 +142,10 @@ public class AdminCLI {
         try {
             System.out.println("\n===== 화폐 추가 =====");
             System.out.print("화폐 단위 : ");
-            int value = scanner.nextInt();
+            int unit = scanner.nextInt();
             System.out.print("화폐 개수 : ");
             int quantity = scanner.nextInt();
-            cashService.addCash(value,quantity);
+            cashService.addCash(unit,quantity);
             System.out.println("화폐가 추가되었습니다.");
         }catch(InputMismatchException e){
             throw new InputMismatchException("잘못된 입력압니다.");

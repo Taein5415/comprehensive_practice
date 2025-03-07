@@ -98,4 +98,16 @@ public class CashService {
         }
         return changeList; // 거스름돈 리스트 반환
     }
+
+    public void collectCash(int unit, int quantity) {
+        if(unitList.contains(unit)){
+            Cash cash = cashRepository.selectByUnit(unit).get();
+            if(cash.getQuantity()<quantity)
+                throw new InputMismatchException("회수할 화폐의 수가 부족합니다.");
+            cash.setQuantity(cash.getQuantity()-quantity);
+            cashRepository.update(cash);
+        }else{
+            throw new InputMismatchException("잘못된 화폐를 입력했습니다.");
+        }
+    }
 }

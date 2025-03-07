@@ -16,8 +16,8 @@ import java.util.Scanner;
 
 public class UserCLI {
     private final Scanner scanner;
-    private DrinkService drinkService;
-    private CashService cashService;
+    private final DrinkService drinkService;
+    private final CashService cashService;
     private AdminAuthService adminAuthService;
 
     public UserCLI(){
